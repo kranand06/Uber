@@ -1,7 +1,7 @@
 # User Signup API
 
 ## Endpoint
-POST /api/users/signup
+POST   `/api/users/signup`
 
 ---
 
