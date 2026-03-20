@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import connectDB from './db/db.js'
 import userRouter from './routes/userRoutes.js'
+import cookieParser from 'cookie-parser'
 
 
 dotenv.config()
@@ -12,6 +13,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // To parse URL-encoded data
 
+app.use(cookieParser()) // To parse cookies
 
 app.use(cors()) // Enable CORS for all routes
 

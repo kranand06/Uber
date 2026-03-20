@@ -44,3 +44,7 @@ export const loginUser = async (req, res, next) => {
         res.status(500).json({message: 'Error creating user', error})
     }
 }
+
+export const getUserProfile = async (req, res, next) => {
+    res.status(200).json({user: req.user})
+}
