@@ -12,6 +12,7 @@ export const registerUser = async (req, res, next) => {
         const hashed = await hashPassword(password);
         const user = await User.create({name, email, password: hashed})
         const token = generateAuthToken(user);
+        res.cookie('token', token, {httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'})
         res.status(201).json({user, token})
     } catch (error) {
         res.status(500).json({message: 'Error creating user', error})
@@ -37,6 +38,7 @@ export const loginUser = async (req, res, next) => {
                 return res.status(401).json({message: 'Invalid email or password'})
             }
             const token = generateAuthToken(user);
+            res.cookie('token', token, {httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'})
             res.status(200).json({user, token})
         }
 
