@@ -1,6 +1,7 @@
 import User from '../models/userModel.js'
 import {validationResult} from 'express-validator'
 import { hashPassword, generateAuthToken, comparePassword } from '../utils/password.js';
+import BlockedToken from '../models/blockedTokens.js';
 
 export const registerUser = async (req, res, next) => {
     try {
@@ -50,3 +51,17 @@ export const loginUser = async (req, res, next) => {
 export const getUserProfile = async (req, res, next) => {
     res.status(200).json({user: req.user})
 }
+
+
+export const LogoutUser = async (req, res, next) => {
+    try {
+        const token = req.cookies.token || req.header('Authorization')?.split(' ')[1];
+        if (token) {
+            await BlockedToken.create({ token });
+        }
+        res.clearCookie('token');
+        res.status(200).json({ message: 'User logged out successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging out user', error });
+    }
+};

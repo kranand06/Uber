@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import BlockedToken from '../models/blockedTokens.js';
 
 
 export const checkAuth = async (req, res, next) => {
@@ -7,6 +8,10 @@ export const checkAuth = async (req, res, next) => {
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided, authorization denied' });
+    }
+    const isBlocked = await BlockedToken.findOne({ token });
+    if (isBlocked) {
+        return res.status(401).json({ message: 'Unauthorised Access' });
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
