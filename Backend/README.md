@@ -31,7 +31,8 @@ This endpoint is used to register a new user.
   "name": "Kumar Anand",
   "email": "anand@example.com",
   "password": "123456"
-}
+} 
+```
 
 
 ### Example Response
@@ -47,3 +48,4 @@ This endpoint is used to register a new user.
     },
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5xsrbumkihgtMxOGZiNTIxZGFlOTc1YyIsImlhdCI6MTc3Mzk5NDIyMH0.bNIJQlgsqLqPKemM7ie-G-6F3D34y3JzyrX2SDnYytg"
 }
+```
