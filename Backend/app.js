@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import connectDB from './db/db.js'
 import userRouter from './routes/userRoutes.js'
+import driverRouter from './routes/driverRoutes.js'
 import cookieParser from 'cookie-parser'
 
 
@@ -24,5 +25,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', userRouter)
+app.use('/api/drivers', driverRouter)
 
 export default app
