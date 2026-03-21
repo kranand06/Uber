@@ -1,7 +1,7 @@
 import express from 'express';
 import {body} from 'express-validator';
 import { registerUser, loginUser, getUserProfile, LogoutUser } from '../controllers/userControllers.js';
-import { checkAuth } from '../middlewares/auth.js';
+import { checkUserAuth } from '../middlewares/auth.js';
 
 const userRouter = express.Router();
 
@@ -18,8 +18,8 @@ userRouter.post('/login', [
     body('password').notEmpty().withMessage('Password is required')
 ], loginUser);
 
-userRouter.get('/profile', checkAuth, getUserProfile);
+userRouter.get('/profile', checkUserAuth, getUserProfile);
 
-userRouter.get('/logout', checkAuth, LogoutUser);
+userRouter.get('/logout', checkUserAuth, LogoutUser);
 
 export default userRouter;
