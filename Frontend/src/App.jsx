@@ -8,6 +8,8 @@ import LoginPage from './Pages/loginPage.jsx';
 import HomePage from './Pages/HomePage';
 import Error404 from './Pages/Error404';
 import { Toaster } from "react-hot-toast";
+import ProfilePage from './Pages/ProfilePage.jsx';
+import LogoutPage from './Pages/LogoutPage.jsx';
 
 
 const App = () => {
@@ -25,6 +27,8 @@ const authenticated = !!token;
 
 
         <Route path="/main" element={authenticated ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={authenticated ? <ProfilePage /> : <Navigate to="/login" />} />
+        <Route path="/logout" element={authenticated ? <LogoutPage /> : <Navigate to="/login" />} />
         <Route path="*" element={<Error404 />} />
         {/* <Route path="/notes" element={authenticated ? <Notes /> : <Navigate to="/login" />} />
         <Route path="/chat" element={authenticated ? <Chat /> : <Navigate to="/login" />} />

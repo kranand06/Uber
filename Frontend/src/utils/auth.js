@@ -93,3 +93,22 @@ export const signupUser = async (name, email, password) => {
     };
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    const token = localStorage.getItem("token");
+  const res = await axios.get(`${API_URL}/users/logout`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if(res.status === 200) {
+    return { success: true,message: "Logged out successfully!" };
+  }
+  else {
+    return { success: false, message: res.data?.message || "Logout failed. Try again." };
+  }
+  } catch (error) {
+    return { success: false, message: "Logout failed." };
+  }
+};

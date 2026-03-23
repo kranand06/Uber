@@ -58,7 +58,6 @@ export default function SignupPage() {
     if (role === "user") {
       signup(formData.name, formData.email, formData.password)
       .then((res) => {
-        console.log("Signup response:", res);
         if (res.success) {
           toast.success("Signup successful!");
         } else {
@@ -66,7 +65,6 @@ export default function SignupPage() {
         }
       })
       .catch((err) => {
-        console.error("Signup error:", err);
         toast.error("An error occurred. Please try again.");
       });
     }

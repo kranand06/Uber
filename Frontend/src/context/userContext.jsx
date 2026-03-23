@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { checkAuth, loginUser, signupUser } from "../utils/auth.js";
+import { checkAuth, loginUser, logoutUser, signupUser } from "../utils/auth.js";
 import toast from "react-hot-toast";
 
 export const UserContext = createContext({});
@@ -62,9 +62,21 @@ export default function UserProvider({ children }) {
     }
   };
 
+  const logout = async () => {
+    const res = await logoutUser();
+    if(res.success) {
+    localStorage.removeItem("token");
+    setUser({});
+    setToken(null);
+    toast.success("Logged out successfully!");
+    } else {
+      toast.error("Logout failed. Try again.");
+    }
+  }
+
 
   return (
-    <UserContext.Provider value={{ user, setUser, token, setToken, login, signup }}>
+    <UserContext.Provider value={{ user, setUser, token, setToken, login, signup, logout }}>
       {children}
     </UserContext.Provider>
   );
