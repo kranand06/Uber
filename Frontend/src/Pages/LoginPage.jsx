@@ -143,7 +143,7 @@ export default function LoginPage() {
       <div className="hidden lg:flex w-1/2 bg-[url('/Heroimage.jpg')] bg-cover bg-center items-center justify-center">
         <div className="bg-black/20 w-full h-full flex items-center justify-center px-8">
           <h1 className="text-white text-3xl font-bold text-center leading-relaxed">
-            Ride smarter, move faster 🚕
+            Ride smarter, move faster
           </h1>
         </div>
       </div>
