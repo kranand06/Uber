@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { UserContext } from './context/userContext';
 import Footer from './Components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -12,20 +12,9 @@ import { Toaster } from "react-hot-toast";
 
 const App = () => {
 
-  const { user, checkAuth } = useContext(UserContext);
+const { token } = useContext(UserContext);
 
-  const [authenticated, setAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const verifyAuth = async () => {
-      if (user.token) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-    };
-    verifyAuth();
-  }, [user]);
+const authenticated = !!token;
 
   return (
     <>

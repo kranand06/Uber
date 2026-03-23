@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import { UserContext } from "../context/userContext";
 
 
 export default function SignupPage() {
+
+    const { signup } = useContext(UserContext);
+
   const [role, setRole] = useState("user");
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -51,6 +55,21 @@ export default function SignupPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateStep1()) return;
+    if (role === "user") {
+      signup(formData.name, formData.email, formData.password)
+      .then((res) => {
+        console.log("Signup response:", res);
+        if (res.success) {
+          toast.success("Signup successful!");
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Signup error:", err);
+        toast.error("An error occurred. Please try again.");
+      });
+    }
     if (role === "driver") {
       const { color, model, plate, capacity, type } = formData;
 
@@ -58,10 +77,8 @@ export default function SignupPage() {
         toast.error("Fill all vehicle details");
         return;
       }
+      toast.error("Driver login not implemented yet.");
     }
-
-    console.log(role, formData);
-    toast.success("Signup successful 🚀");
 
     setFormData({
       name: "",
@@ -266,7 +283,7 @@ export default function SignupPage() {
 
                   <div className="space-y-2">
                     <label className="text-gray-700">Capacity</label>
-                    <input name="capacity" className="input" onChange={handleChange} />
+                    <input name="capacity" type="number" className="input" onChange={handleChange} />
                   </div>
 
                   <div className="space-y-2">

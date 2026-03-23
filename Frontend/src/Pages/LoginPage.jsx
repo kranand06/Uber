@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react'
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { UserContext } from '../context/userContext';
 
 export default function LoginPage() {
+
+  const { login } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
   const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -17,9 +23,26 @@ export default function LoginPage() {
       toast.error("All Field are required");
       return;
     }
-    console.log(role, email, password);
+    if (role === "user") {
+      login(email, password)
+      .then((res) => {
+        if (res.success) {
+          toast.success("Login successful!");
+          navigate("/main");
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Login error:", err);
+        toast.error("An error occurred. Please try again.");
+      });
     setEmail("");
     setPassword("");
+    }
+    if (role === "driver") {
+      toast.error("Driver login not implemented yet.");
+    }
   }
 
   return (
