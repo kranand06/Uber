@@ -169,7 +169,7 @@ export default function SignupPage() {
                 <span className="text-sm text-gray-600">Basic</span>
               </div>
 
-              <div className="w-10 h-[2px] bg-gray-300"></div>
+              <div className="w-10 h-0.5 bg-gray-300"></div>
 
               <div className="flex items-center gap-2">
                 <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${

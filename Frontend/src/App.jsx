@@ -4,7 +4,7 @@ import Footer from './Components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HeroPage from './Pages/HeroPage';
 import SignupPage from './Pages/SignupPage';
-import LoginPage from './Pages/LoginPage';
+import LoginPage from './Pages/loginPage.jsx';
 import HomePage from './Pages/HomePage';
 import Error404 from './Pages/Error404';
 import { Toaster } from "react-hot-toast";

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function HeroPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[url('/Heroimage.jpg')]  bg-no-repeat bg-cover bg-[center_85%] md:bg-[center_75%]">
+    <div className="min-h-screen flex flex-col bg-[url('/Heroimage.jpg')]  bg-no-repeat bg-cover bg-position-[center_85%] md:bg-position-[center_75%]">
       {/* Top Section with Image */}
       <div className="flex-1 relative flex items-center justify-center overflow-hidden">
         {/* Logo */}
