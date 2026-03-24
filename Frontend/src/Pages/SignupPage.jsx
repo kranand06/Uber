@@ -1,15 +1,19 @@
 import React, { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { UserContext } from "../context/userContext";
+import { DriverContext } from "../context/driverContext";
 
 
 export default function SignupPage() {
 
-    const { signup } = useContext(UserContext);
+  const { signup } = useContext(UserContext);
+  const { driverSignup } = useContext(DriverContext);
+
+  const navigate = useNavigate();
 
   const [role, setRole] = useState("user");
   const [step, setStep] = useState(1);
@@ -38,9 +42,17 @@ export default function SignupPage() {
       toast.error("All fields are required");
       return false;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Invalid email");
+      return false;
+    }
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
+      return false;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
       return false;
     }
 
@@ -57,25 +69,45 @@ export default function SignupPage() {
     if (!validateStep1()) return;
     if (role === "user") {
       signup(formData.name, formData.email, formData.password)
-      .then((res) => {
-        if (res.success) {
-          toast.success("Signup successful!");
-        } else {
-          toast.error(res.message);
-        }
-      })
-      .catch((err) => {
-        toast.error("An error occurred. Please try again.");
-      });
+        .then((res) => {
+          if (res.success) {
+            toast.success("Signup successful!");
+            navigate("/main");
+          } else {
+            toast.error(res.message);
+          }
+        })
+        .catch((err) => {
+          toast.error("An error occurred. Please try again.");
+        });
     }
     if (role === "driver") {
-      const { color, model, plate, capacity, type } = formData;
+      const { name, email, password, color, model, plate, capacity, type } = formData;
 
       if (!color || !model || !plate || !capacity || !type) {
         toast.error("Fill all vehicle details");
         return;
       }
-      toast.error("Driver login not implemented yet.");
+      if (plate.length < 9) {
+        toast.error("Enter valid number plate");
+        return;
+      }
+      if (capacity <= 0) {
+        toast.error("Capacity must be greater than 0");
+        return;
+      }
+      driverSignup(name, email, password, color, model, plate, capacity, type)
+        .then((res) => {
+          if (res.success) {
+            toast.success("Signup successful!");
+            navigate("/driver-main");
+          } else {
+            toast.error(res.message);
+          }
+        })
+        .catch((err) => {
+          toast.error("An error occurred. Please try again.");
+        });
     }
 
     setFormData({
@@ -118,9 +150,8 @@ export default function SignupPage() {
                 setRole("user");
                 setStep(1);
               }}
-              className={`flex-1 py-3 rounded-lg font-medium ${
-                role === "user" ? "bg-white text-black" : "text-gray-500"
-              }`}
+              className={`flex-1 py-3 rounded-lg font-medium ${role === "user" ? "bg-white text-black" : "text-gray-500"
+                }`}
             >
               User
             </button>
@@ -130,9 +161,8 @@ export default function SignupPage() {
                 setRole("driver");
                 setStep(1);
               }}
-              className={`flex-1 py-3 rounded-lg font-medium ${
-                role === "driver" ? "bg-white text-black" : "text-gray-500"
-              }`}
+              className={`flex-1 py-3 rounded-lg font-medium ${role === "driver" ? "bg-white text-black" : "text-gray-500"
+                }`}
             >
               Driver
             </button>
@@ -159,9 +189,8 @@ export default function SignupPage() {
           {role === "driver" && (
             <div className="flex items-center justify-center gap-4">
               <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${
-                  step === 1 ? "bg-black text-white" : "bg-gray-300"
-                }`}>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${step === 1 ? "bg-black text-white" : "bg-gray-300"
+                  }`}>
                   1
                 </div>
                 <span className="text-sm text-gray-600">Basic</span>
@@ -170,9 +199,8 @@ export default function SignupPage() {
               <div className="w-10 h-0.5 bg-gray-300"></div>
 
               <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${
-                  step === 2 ? "bg-black text-white" : "bg-gray-300"
-                }`}>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${step === 2 ? "bg-black text-white" : "bg-gray-300"
+                  }`}>
                   2
                 </div>
                 <span className="text-sm text-gray-600">Vehicle</span>
@@ -211,6 +239,7 @@ export default function SignupPage() {
                     <label className="text-gray-700">What's your email?</label>
                     <input
                       name="email"
+                      type="email"
                       placeholder="Enter your email"
                       value={formData.email}
                       onChange={handleChange}
@@ -333,11 +362,11 @@ export default function SignupPage() {
 
       {/* RIGHT */}
       <div className="hidden lg:flex w-1/2 bg-[url('/Heroimage.jpg')] bg-cover bg-center items-center justify-center">
-      <div className="bg-black/20 w-full h-full flex items-center justify-center px-8">
-        <h1 className="text-white text-3xl font-bold text-center px-8">
-          Start your journey today
-        </h1>
-      </div>
+        <div className="bg-black/20 w-full h-full flex items-center justify-center px-8">
+          <h1 className="text-white text-3xl font-bold text-center px-8">
+            Start your journey today
+          </h1>
+        </div>
       </div>
     </div>
   );

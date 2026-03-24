@@ -1,21 +1,26 @@
-import React, { useContext, useEffect } from 'react'
-import { UserContext } from '../context/userContext';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/userContext';
+import { DriverContext } from '../context/driverContext';
 
 const LogoutPage = () => {
-
   const navigate = useNavigate();
 
-  const { logout } = useContext(UserContext);
+  const { token, logout } = useContext(UserContext);
+  const { drivertoken, driverLogout } = useContext(DriverContext);
 
-useEffect(() => {
-  logout(); // clear state/token
-  navigate("/login");
-}, [logout, navigate]);
+  const handleLogout = async () => {
+    if (token) await logout();
+    if (drivertoken) await driverLogout();
+
+    navigate("/login", { replace: true }); // ✅ prevents back-loop
+  };
 
   return (
-    <div>LogoutPage</div>
-  )
-}
+    <button onClick={handleLogout}>
+      Logout
+    </button>
+  );
+};
 
-export default LogoutPage
+export default LogoutPage;

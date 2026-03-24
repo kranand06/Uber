@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { UserContext } from '../context/userContext';
+import { DriverContext } from '../context/driverContext';
 
 export default function LoginPage() {
 
   const { login } = useContext(UserContext);
+  const { driverLogin } = useContext(DriverContext);
 
   const navigate = useNavigate();
 
@@ -23,6 +25,10 @@ export default function LoginPage() {
       toast.error("All Field are required");
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  toast.error("Invalid email");
+  return;
+}
     if (role === "user") {
       login(email, password)
       .then((res) => {
@@ -41,7 +47,21 @@ export default function LoginPage() {
     setPassword("");
     }
     if (role === "driver") {
-      toast.error("Driver login not implemented yet.");
+      driverLogin(email, password)
+      .then((res) => {
+        if (res.success) {
+          toast.success("Login successful!");
+          navigate("/driver-main");
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Login error:", err);
+        toast.error("An error occurred. Please try again.");
+      });
+    setEmail("");
+    setPassword("");
     }
   }
 

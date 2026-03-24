@@ -5,30 +5,41 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import HeroPage from './Pages/HeroPage';
 import SignupPage from './Pages/SignupPage.jsx';
 import LoginPage from './Pages/loginPage.jsx';
-import HomePage from './Pages/HomePage';
+import HomePage from './Pages/User/HomePage.jsx';
 import Error404 from './Pages/Error404';
 import { Toaster } from "react-hot-toast";
-import ProfilePage from './Pages/ProfilePage.jsx';
+import ProfilePage from './Pages/User/ProfilePage.jsx';
 import LogoutPage from './Pages/LogoutPage.jsx';
+import DriverHome from './Pages/Driver/DriverHome.jsx';
+import { DriverContext } from './context/driverContext.jsx';
 
 
 const App = () => {
 
-const { token } = useContext(UserContext);
+  const { token } = useContext(UserContext);
+  const { drivertoken } = useContext(DriverContext);
 
-const authenticated = !!token;
+  const userAuthenticated = !!token;
+  const driverAuthenticated = !!drivertoken;
 
   return (
     <>
       <Routes>
-        <Route path="/signup" element={!authenticated ? <SignupPage /> : <Navigate to="/main" />} />
-        <Route path="/login" element={!authenticated ? <LoginPage /> : <Navigate to="/main" />} />
-        <Route path="/" element={!authenticated ? <HeroPage /> : <Navigate to="/main" />} />
+        <Route path="/signup" element={userAuthenticated ? (<Navigate to="/main" />) : driverAuthenticated ? (<Navigate to="/driver-main" />) : (<SignupPage />)} />
+        <Route path="/login" element={userAuthenticated ? (<Navigate to="/main" />) : driverAuthenticated ? (<Navigate to="/driver-main" />) : (<LoginPage />)} />
+        <Route path="/" element={userAuthenticated ? (<Navigate to="/main" />) : driverAuthenticated ? (<Navigate to="/driver-main" />) : (<HeroPage />)} />
 
 
-        <Route path="/main" element={authenticated ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/profile" element={authenticated ? <ProfilePage /> : <Navigate to="/login" />} />
-        <Route path="/logout" element={authenticated ? <LogoutPage /> : <Navigate to="/login" />} />
+        <Route path="/main" element={userAuthenticated ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={userAuthenticated ? <ProfilePage /> : <Navigate to="/login" />} />
+        <Route
+          path="/logout"
+          element={
+            userAuthenticated || driverAuthenticated
+              ? <LogoutPage />
+              : <Navigate to="/login" />
+          }
+        />        <Route path="/driver-main" element={driverAuthenticated ? <DriverHome /> : <Navigate to="/login" />} />
         <Route path="*" element={<Error404 />} />
         {/* <Route path="/notes" element={authenticated ? <Notes /> : <Navigate to="/login" />} />
         <Route path="/chat" element={authenticated ? <Chat /> : <Navigate to="/login" />} />
@@ -45,7 +56,7 @@ const authenticated = !!token;
       <div className="hidden lg:block">
         <Footer />
       </div>
-      
+
     </>
   )
 }
